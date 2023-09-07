@@ -22,38 +22,78 @@ collapse_ensembl_multivals <- function(x) {
 #'
 #' @concept sc_annotation
 #' @export
-make_gene_annotation <- function(sce, annotation_db_file) {
-  genome_ann <- AnnotationDbi::loadDb(annotation_db_file)
+make_gene_annotation <- function(sce, annotation_db_file, db_NCBI = TRUE, organism = NULL, ah_id = NULL) {
 
-  gene_annotation <- data.frame(
-    ENSEMBL = rownames(sce),
-    row.names = rownames(sce),
-    stringsAsFactors = FALSE
-  ) %>%
-    dplyr::mutate(
-      SYMBOL = AnnotationDbi::mapIds(
-        genome_ann,
-        keys = .data$ENSEMBL,
-        column = "SYMBOL",
-        keytype = "ENSEMBL",
-        multiVals = collapse_ensembl_multivals
-      ),
-      SYMBOL = dplyr::if_else(is.na(.data$SYMBOL), .data$ENSEMBL, .data$SYMBOL),
-      GENENAME = AnnotationDbi::mapIds(
-        genome_ann,
-        keys = .data$ENSEMBL,
-        column = "GENENAME",
-        keytype = "ENSEMBL",
-        multiVals = collapse_ensembl_multivals
-      ),
-      ENTREZID = AnnotationDbi::mapIds(
-        genome_ann,
-        keys = .data$ENSEMBL,
-        column = "ENTREZID",
-        keytype = "ENSEMBL",
-        multiVals = collapse_ensembl_multivals
-      )
+  if (db_NCBI){
+    genome_ann <- AnnotationDbi::loadDb(annotation_db_file)
+
+    gene_annotation <- data.frame(
+      ENSEMBL = rownames(sce),
+      row.names = rownames(sce),
+      stringsAsFactors = FALSE
     ) %>%
+      dplyr::mutate(
+        SYMBOL = AnnotationDbi::mapIds(
+          genome_ann,
+          keys = .data$ENSEMBL,
+          column = "SYMBOL",
+          keytype = "ENSEMBL",
+          multiVals = collapse_ensembl_multivals
+        ),
+        SYMBOL = dplyr::if_else(is.na(.data$SYMBOL), .data$ENSEMBL, .data$SYMBOL),
+        GENENAME = AnnotationDbi::mapIds(
+          genome_ann,
+          keys = .data$ENSEMBL,
+          column = "GENENAME",
+          keytype = "ENSEMBL",
+          multiVals = collapse_ensembl_multivals
+        ),
+        ENTREZID = AnnotationDbi::mapIds(
+          genome_ann,
+          keys = .data$ENSEMBL,
+          column = "ENTREZID",
+          keytype = "ENSEMBL",
+          multiVals = collapse_ensembl_multivals
+        )
+      )
+  }else{
+    organism = gsub("_", " ", organism)
+    AnnHub <- AnnotationHub()
+    genome_ann <- query(ah, c("Gallus gallus","EnsDB"))[[ah_id]]
+
+    gene_annotation <- data.frame(
+      ENSEMBL = rownames(sce),
+      row.names = rownames(sce),
+      stringsAsFactors = FALSE
+    ) %>%
+      dplyr::mutate(
+        SYMBOL = AnnotationDbi::mapIds(
+          genome_ann,
+          keys = ENSEMBL,
+          column = "SYMBOL",
+          keytype = "GENEID",
+          # custom functions aren't implemented yet for EnsDB mapIds
+          multiVals = "first"
+        ),
+        SYMBOL = dplyr::if_else(is.na(SYMBOL), ENSEMBL, SYMBOL),
+        GENENAME = AnnotationDbi::mapIds(
+          genome_ann,
+          keys = ENSEMBL,
+          column = "GENENAME",
+          keytype = "GENEID",
+          multiVals = "first"
+        ),
+        ENTREZID = AnnotationDbi::mapIds(
+          genome_ann,
+          keys = ENSEMBL,
+          column = "ENTREZID",
+          keytype = "GENEID",
+          multiVals = "first"
+        )
+      )
+  }
+
+  gene_annotation <- gene_annotation %>%
     dplyr::select(.data$ENSEMBL, .data$SYMBOL, .data$ENTREZID, dplyr::everything()) %>%
     as.data.frame() %>%
     set_rownames(.$ENSEMBL)
