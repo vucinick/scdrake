@@ -13,7 +13,7 @@ ANNOTATION_LIST:
   human: "org.Hs.eg.db"
   mouse: "org.Mm.eg.db"
 ENSEMBL_SPECIES: "Homo_sapiens"
-ANN_HUB: null
+ANN_HUB_GENOME: null
 ###############################################################################
 
 ### Input and output files ####################################################

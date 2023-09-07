@@ -140,7 +140,7 @@ get_input_qc_subplan <- function(cfg, cfg_pipeline, cfg_main) {
     ## -- (e.g. TBCE has both ENSG00000285053 and ENSG00000284770 ENSEMBL IDs assigned ->
     ## -- its symbol is changed to TBCE_ENSG00000285053 and TBCE_ENSG00000284770).
     gene_annotation = make_gene_annotation(sce_selected, annotation_db_file = !!cfg_main$ANNOTATION_DB_FILE,
-                                           db_NCBI = !!cfg_main$DATABASE_NCBI, organism = !!cfg_main$ORGANISM, ah_id = !!cfg_main$ANN_HUB),
+                                           db_NCBI = !!cfg_main$DATABASE_NCBI, organism = !!cfg_main$ORGANISM, genome = !!cfg_main$ANN_HUB_GENOME),
 
     ## -- Final object: cells and genes filtered, annotated genes.
     sce_final_input_qc = sce_final_input_qc_fn(sce_selected, gene_annotation = gene_annotation),

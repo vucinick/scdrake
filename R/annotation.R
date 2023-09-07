@@ -22,7 +22,7 @@ collapse_ensembl_multivals <- function(x) {
 #'
 #' @concept sc_annotation
 #' @export
-make_gene_annotation <- function(sce, annotation_db_file, db_NCBI = TRUE, organism = NULL, ah_id = NULL) {
+make_gene_annotation <- function(sce, annotation_db_file, db_NCBI = TRUE, organism = NULL, genome = NULL) {
 
   if (db_NCBI){
     genome_ann <- AnnotationDbi::loadDb(annotation_db_file)
@@ -40,7 +40,7 @@ make_gene_annotation <- function(sce, annotation_db_file, db_NCBI = TRUE, organi
           keytype = "ENSEMBL",
           multiVals = collapse_ensembl_multivals
         ),
-        SYMBOL = dplyr::if_else(is.na(.data$SYMBOL), .data$ENSEMBL, .data$SYMBOL),
+        SYMBOL = dplyr::if_else(is.na(SYMBOL), ENSEMBL, SYMBOL),
         GENENAME = AnnotationDbi::mapIds(
           genome_ann,
           keys = .data$ENSEMBL,
@@ -59,7 +59,15 @@ make_gene_annotation <- function(sce, annotation_db_file, db_NCBI = TRUE, organi
   }else{
     organism = gsub("_", " ", organism)
     AnnHub <- AnnotationHub()
-    genome_ann <- query(ah, c("Gallus gallus","EnsDB"))[[ah_id]]
+    db_len <- length(query(AnnHub, c("EnsDB", genome)))
+    if (db_len == 0){
+      possible_genomes <- unique(mcols(query(AnnHub, c("EnsDB",  organism)))[,"genome"])
+      cli::cli_alert_warning("The genome doesn't exist or the AnnHub doesn't have it.") # nolint
+      cli::cli_alert_info(cat("Try: ", paste0(head(possible_genomes, -1), ", "), tail(possible_genomes, 1)))
+    }else{
+      # Take the last one (the newest version)
+      genome_ann <- query(AnnHub, c("EnsDB", genome = genome))[[db_len]]
+    }
 
     gene_annotation <- data.frame(
       ENSEMBL = rownames(sce),
@@ -94,7 +102,7 @@ make_gene_annotation <- function(sce, annotation_db_file, db_NCBI = TRUE, organi
   }
 
   gene_annotation <- gene_annotation %>%
-    dplyr::select(.data$ENSEMBL, .data$SYMBOL, .data$ENTREZID, dplyr::everything()) %>%
+    dplyr::select(ENSEMBL, SYMBOL, ENTREZID, dplyr::everything()) %>%
     as.data.frame() %>%
     set_rownames(.$ENSEMBL)
 
