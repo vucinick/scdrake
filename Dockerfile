@@ -9,7 +9,7 @@
 ## --build-arg R_PKG_INSTALL_NCPUS=8 --build-arg R_PKG_INSTALL_MAKE_NCPUS=4 --build-arg SCDRAKE_VERSION=<version> \
 ## -t jirinovo/scdrake:<version>-bioc3.15 -f Dockerfile
 
-ARG BIOCONDUCTOR_VERSION=3_15
+ARG BIOCONDUCTOR_VERSION=3_17
 FROM bioconductor/bioconductor_docker:RELEASE_$BIOCONDUCTOR_VERSION
 
 ARG SCDRAKE_VERSION
@@ -72,8 +72,8 @@ RUN mkdir -p /home/rstudio/.local/bin
 RUN ln -s /usr/local/bin/yq /home/rstudio/.local/bin/yq
 RUN chown -R rstudio:rstudio /home/rstudio/.local
 
-ENV RENV_VERSION=0.16.0
-RUN R -e "BiocManager::install('rstudio/renv@${RENV_VERSION}')"
+ENV RENV_VERSION=1.0.2
+RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'), version = '${RENV_VERSION}')"
 ARG R_PKG_INSTALL_NCPUS=1
 ARG R_PKG_INSTALL_MAKE_NCPUS=1
 ENV MAKEFLAGS="-j${R_PKG_INSTALL_MAKE_NCPUS}"
@@ -85,6 +85,8 @@ ENV BIOCONDUCTOR_USE_CONTAINER_REPOSITORY=TRUE
 
 COPY renv.lock /
 
+RUN R -e "BiocManager::install(c('MatrixGenerics', 'AnnotationDbi', 'S4Vectors', 'scater', 'org.Hs.eg.db', 'PCAtools', 'BiocParallel', 'bluster', 'glmGamPoi', 'batchelor', 'ensembldb', 'BiocSingular', 'BiocGenerics', 'SingleCellExperiment', 'SummarizedExperiment', 'DropletUtils', 'SingleR', 'scran', 'gorgitko/SC3', 'scDblFinder', 'BiocStyle', 'celldex'))"
+#RUN R -e "renv::restore()"
 RUN Rscript -e "\
   options(Ncpus = ${R_PKG_INSTALL_NCPUS});\
   renv::consent(TRUE);\
