@@ -182,7 +182,7 @@ get_gene_filter <- function(sce, min_ratio_cells, min_umi) {
   assert_that_(min_umi >= 0)
 
   num_cells <- min_ratio_cells * ncol(sce)
-  is_expressed <- rowSums(counts(sce) >= min_umi) >= num_cells
+  is_expressed <- Matrix::rowSums(counts(sce) >= min_umi) >= num_cells
   return(!is_expressed)
 }
 

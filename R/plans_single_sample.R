@@ -91,14 +91,14 @@ get_input_qc_subplan <- function(cfg, cfg_pipeline, cfg_main) {
 
     ## -- sce filtered by dataset-sensitive filters
     sce_qc_filter = sce_unfiltered[, !sce_unfiltered$discard_qc],
-    sce_qc_filter_rowSums = counts(sce_qc_filter) %>% rowSums(),
+    sce_qc_filter_rowSums = counts(sce_qc_filter) %>% Matrix::rowSums(),
     sce_qc_gene_filter = get_gene_filter(sce_qc_filter, min_ratio_cells = !!cfg$MIN_RATIO_CELLS, min_umi = !!cfg$MIN_UMI),
     sce_qc_filter_genes = sce_qc_filter[!sce_qc_gene_filter, ],
     sce_qc_filter_genes_info = save_object_info(sce_qc_filter_genes),
 
     ## -- sce filtered by custom filters
     sce_custom_filter = sce_unfiltered[, !sce_unfiltered$discard_custom],
-    sce_custom_filter_rowSums = counts(sce_custom_filter) %>% rowSums(),
+    sce_custom_filter_rowSums = counts(sce_custom_filter) %>% Matrix::rowSums(),
     sce_custom_gene_filter = get_gene_filter(sce_custom_filter, min_ratio_cells = !!cfg$MIN_RATIO_CELLS, min_umi = !!cfg$MIN_UMI),
     sce_custom_filter_genes = sce_custom_filter[!sce_custom_gene_filter, ],
     sce_custom_filter_genes_info = save_object_info(sce_custom_filter_genes),
@@ -139,7 +139,8 @@ get_input_qc_subplan <- function(cfg, cfg_pipeline, cfg_main) {
     ## -- ENSEMBL ID is appended to symbols having multiple ENSEMBL IDs
     ## -- (e.g. TBCE has both ENSG00000285053 and ENSG00000284770 ENSEMBL IDs assigned ->
     ## -- its symbol is changed to TBCE_ENSG00000285053 and TBCE_ENSG00000284770).
-    gene_annotation = make_gene_annotation(sce_selected, annotation_db_file = !!cfg_main$ANNOTATION_DB_FILE),
+    gene_annotation = make_gene_annotation(sce_selected, annotation_db_file = !!cfg_main$ANNOTATION_DB_FILE,
+                                           db_NCBI = !!cfg_main$DATABASE_NCBI, organism = !!cfg_main$ORGANISM, ah_id = !!cfg_main$ANN_HUB),
 
     ## -- Final object: cells and genes filtered, annotated genes.
     sce_final_input_qc = sce_final_input_qc_fn(sce_selected, gene_annotation = gene_annotation),
