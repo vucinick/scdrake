@@ -12,7 +12,7 @@
 ARG BIOCONDUCTOR_VERSION=3_17
 FROM bioconductor/bioconductor_docker:RELEASE_$BIOCONDUCTOR_VERSION
 
-ARG SCDRAKE_VERSION
+ARG SCDRAKE_VERSION=1.5.0
 RUN test -n "$SCDRAKE_VERSION" || (echo "SCDRAKE_VERSION not set" && false)
 ENV SCDRAKE_VERSION=$SCDRAKE_VERSION
 
@@ -85,7 +85,7 @@ ENV BIOCONDUCTOR_USE_CONTAINER_REPOSITORY=TRUE
 
 COPY renv.lock /
 
-RUN R -e "BiocManager::install(c('MatrixGenerics', 'AnnotationDbi', 'S4Vectors', 'scater', 'org.Hs.eg.db', 'PCAtools', 'BiocParallel', 'bluster', 'glmGamPoi', 'batchelor', 'ensembldb', 'BiocSingular', 'BiocGenerics', 'SingleCellExperiment', 'SummarizedExperiment', 'DropletUtils', 'SingleR', 'scran', 'gorgitko/SC3', 'scDblFinder', 'BiocStyle', 'celldex'))"
+RUN R -e "BiocManager::install(c('MatrixGenerics', 'AnnotationDbi', 'S4Vectors', 'scater', 'org.Hs.eg.db', 'PCAtools', 'BiocParallel', 'bluster', 'glmGamPoi', 'batchelor', 'ensembldb', 'BiocSingular', 'BiocGenerics', 'SingleCellExperiment', 'SummarizedExperiment', 'DropletUtils', 'SingleR', 'scran', 'SC3', 'scDblFinder', 'BiocStyle', 'celldex'))"
 #RUN R -e "renv::restore()"
 RUN Rscript -e "\
   options(Ncpus = ${R_PKG_INSTALL_NCPUS});\
