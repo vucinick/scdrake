@@ -16,7 +16,6 @@ A named list. \emph{Output target}: \code{cell_annotation_labels}
 \code{SingleR::SingleR()} returns three types of cell labels. In the returned list from this function,
 names of those are prefixed by a reference dataset's name and modified such that:
 \itemize{
-\item \code{first.labels} ("raw" labels) -> \verb{<reference_name>_labels_raw}
 \item \code{labels} (fine-tuned, unpruned labels) -> \verb{<reference_name>_labels}
 \item \code{pruned.labels} (fine-tuned and pruned labels) -> \verb{<reference_name>_labels_pruned}
 }

@@ -204,7 +204,6 @@ cell_annotation_fn <- function(cell_annotation_params, sce_test, BPPARAM = BiocP
 cell_annotation_labels_fn <- function(cell_annotation) {
   purrr::map2(cell_annotation$name, cell_annotation$cell_annotation, function(name, cell_annotation) {
     res <- list(
-      labels_raw = cell_annotation$first.labels,
       labels = cell_annotation$labels,
       labels_pruned = cell_annotation$pruned.labels
     ) %>% purrr::map(factor)

@@ -968,7 +968,6 @@ Later added to the `cell_data` target and in turn, to `colData()` of the `sce_fi
 
 By default, there are three vectors with labels for each reference dataset named as:
 
-- `<reference_name>_labels_raw`: "raw" labels. Taken from `first.labels` column of `SingleR::SingleR()` output
 - `<reference_name>_labels`: fine-tuned labels. Taken from `labels` column of `SingleR::SingleR()` output
 - `<reference_name>_labels_pruned`: fine-tuned and pruned labels (contains `NA`s for low quality labels).
   Taken from `pruned.labels` column of `SingleR::SingleR()` output.
