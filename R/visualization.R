@@ -200,12 +200,11 @@ highlight_points <- function(p, column_name, levels, alpha_val = 0.1) {
     dplyr::mutate(alpha_ = dplyr::if_else(!!sym(column_name) %in% !!levels, 1, alpha_val))
   p$layers <- lapply(p$layers, function(layer) {
     if (any(names(layer$mapping) %in% c("color", "colour"))) {
-      layer$aes_params$alpha <- NULL
+      layer$aes_params$alpha <- p$data$alpha_
     }
 
     return(layer)
   })
-  p <- p + aes(alpha = .data$alpha_) + ggplot2::scale_alpha_identity()
 
   return(p)
 }
