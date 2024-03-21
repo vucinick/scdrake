@@ -29,6 +29,15 @@
     msg = "{.var input_data$type} must be {.vals possible_input_data_types}. Current value: {.val {cfg$INPUT_DATA$type}}"
   )
 
+  possible_filters_operators <- c("&", "|")
+  for (param_name in c("DATASET_SENSITIVE_FILTERS_OPERATOR", "CUSTOM_FILTERS_OPERATOR")) {
+    val <- cfg[[param_name]]
+    assert_that_(
+      val %in% possible_filters_operators,
+      msg = "{.field {param_name}} must be one of {.vals {possible_filters_operators}}. Current value: {.val {val}}"
+    )
+  }
+
   assert_that_(
     !is_null(cfg$INPUT_DATA$path),
     msg = "{.field INPUT_DATA$type} is not set, data cannot be loaded later."
@@ -70,9 +79,13 @@
     )
   }
 
-  cfg$CELL_ANNOTATION_SOURCES <- .prepare_cell_annotation_sources_params(
-    cfg$CELL_ANNOTATION_SOURCES, cfg$CELL_ANNOTATION_SOURCES_DEFAULTS
-  )
+  if (is_empty(cfg$CELL_ANNOTATION_SOURCES)) {
+    cfg <- add_item_to_list(cfg, "CELL_ANNOTATION_SOURCES")
+  } else {
+    cfg$CELL_ANNOTATION_SOURCES <- .prepare_cell_annotation_sources_params(
+      cfg$CELL_ANNOTATION_SOURCES, cfg$CELL_ANNOTATION_SOURCES_DEFAULTS
+    )
+  }
 
   input_files <- c("NORM_CLUSTERING_REPORT_RMD_FILE", "NORM_CLUSTERING_REPORT_SIMPLE_RMD_FILE")
   if (!is_null(cfg$SELECTED_MARKERS_FILE)) {

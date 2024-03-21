@@ -17,12 +17,13 @@ knitr::opts_chunk$set(
 # scdrake
 
 [![NEWS: updates](https://img.shields.io/badge/NEWS-updates-informational)](NEWS.md)
-[![Documentation and vignettes](https://img.shields.io/badge/Documentation%20&%20vignettes-bioinfocz.github.io/scdrake-informational)](https://bioinfocz.github.io/scdrake)
+[![Documentation and vignettes (stable version)](https://img.shields.io/badge/Documentation%20&%20vignettes-bioinfocz.github.io/scdrake-informational)](https://bioinfocz.github.io/scdrake)
+[![Documentation and vignettes (devel version)](https://img.shields.io/badge/Documentation%20&%20vignettes-bioinfocz.github.io/scdrake-informational)](https://bioinfocz.github.io/scdrake/dev)
 [![Overview and outputs](https://img.shields.io/badge/Overview%20&%20outputs-vignette("pipeline_overview")-informational)](https://bioinfocz.github.io/scdrake/articles/pipeline_overview.html)
 [![Pipeline diagram](https://img.shields.io/badge/Pipeline%20diagram-Show-informational)](https://github.com/bioinfocz/scdrake/blob/main/diagrams/README.md)
 ![License](https://img.shields.io/github/license/bioinfocz/scdrake)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![R-CMD-check-bioc](https://github.com/bioinfocz/scdrake/actions/workflows/check-bioc.yaml/badge.svg?branch=main)](https://github.com/bioinfocz/scdrake/actions/workflows/check-bioc.yaml)
+[![Docker Image CI](https://github.com/bioinfocz/scdrake/actions/workflows/docker-ci.yml/badge.svg?branch=main)](https://github.com/bioinfocz/scdrake/actions/workflows/docker-ci.yml)
 
 `{scdrake}` is a scalable and reproducible pipeline for secondary analysis of droplet-based single-cell RNA-seq data.
 `{scdrake}` is an R package built on top of the `{drake}` package, a [Make](https://www.gnu.org/software/make)-like pipeline
@@ -58,6 +59,12 @@ The pipeline structure along with [diagrams](https://github.com/bioinfocz/scdrak
 and links to outputs is described in `vignette("pipeline_overview")`
 ([link](https://bioinfocz.github.io/scdrake/articles/pipeline_overview.html)).
 
+If you use `{scdrake}` in your research, please, consider citing
+
+> Kubovciak J, Kolar M, Novotny J (2023).
+“Scdrake: a reproducible and scalable pipeline for scRNA-seq data analysis.” *Bioinformatics Advances*, **3**(1).
+[doi:10.1093/bioadv/vbad089](https://doi.org/10.1093/bioadv/vbad089).
+
 Huge thanks go to the authors of the
 [Orchestrating Single-Cell Analysis with Bioconductor](https://bioconductor.org/books/3.15/OSCA) book on whose
 methods and recommendations is `{scdrake}` largely based.
@@ -69,7 +76,7 @@ methods and recommendations is `{scdrake}` largely based.
 ## Using a Docker image (recommended)
 
 A Docker image based on the [official Bioconductor image](https://bioconductor.org/help/docker/)
-(version `r LATEST_STABLE_VERSION_DOCKER_BIOC`) is available. This is the most handy and reproducible way how to use
+(version `r BIOC_VERSION`) is available. This is the most handy and reproducible way how to use
 `{scdrake}` as all the dependencies are already installed and their versions are fixed.
 In addition, the parent Bioconductor image comes bundled with RStudio Server.
 
@@ -107,18 +114,11 @@ out <- scdrake::wrap_code(c(
 
 `r paste(knitr::knit(text = out), collapse = "\n")`
 
-**Note for Mac users with M1 chipsets**: you can use the `arm64` version of the image:
+**Note for Mac users with M1/M2 chipsets**: until version 1.5.0 (inclusive), `arm64` images are available.
 
-```{r docker_latest, include = FALSE}
-out <- scdrake::wrap_code(c(
-  glue::glue("docker pull {DOCKER_IMAGE_STABLE_ARM64}"),
-  glue::glue("singularity pull docker:{DOCKER_IMAGE_STABLE_ARM64}"),
-  glue::glue("docker pull {DOCKER_IMAGE_LATEST_ARM64}"),
-  glue::glue("singularity pull docker:{DOCKER_IMAGE_LATEST_ARM64}")
-))
+```bash
+docker pull jirinovo/scdrake:1.5.0-bioc3.15-arm64
 ```
-
-`r paste(knitr::knit(text = out), collapse = "\n")`
 
 ### Running the container
 
@@ -308,7 +308,10 @@ Then you can go through the [Get Started vignette](https://bioinfocz.github.io/s
 
 ## Vignettes and other readings
 
-See <https://bioinfocz.github.io/scdrake> for a documentation website where links to vignettes below become real :-)
+See <https://bioinfocz.github.io/scdrake> for a documentation website of the latest stable version
+(`r LATEST_STABLE_VERSION`) where links to vignettes below become real :-)
+
+See <https://bioinfocz.github.io/scdrake/dev> for a documentation website of the current development version.
 
 ```{r, child = "vignettes/_vignette_signpost.Rmd"}
 ```

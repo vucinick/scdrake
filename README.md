@@ -3,8 +3,10 @@
 
 [![NEWS:
 updates](https://img.shields.io/badge/NEWS-updates-informational)](NEWS.md)
-[![Documentation and
-vignettes](https://img.shields.io/badge/Documentation%20&%20vignettes-bioinfocz.github.io/scdrake-informational)](https://bioinfocz.github.io/scdrake)
+[![Documentation and vignettes (stable
+version)](https://img.shields.io/badge/Documentation%20&%20vignettes-bioinfocz.github.io/scdrake-informational)](https://bioinfocz.github.io/scdrake)
+[![Documentation and vignettes (devel
+version)](https://img.shields.io/badge/Documentation%20&%20vignettes-bioinfocz.github.io/scdrake-informational)](https://bioinfocz.github.io/scdrake/dev)
 [![Overview and
 outputs](https://img.shields.io/badge/Overview%20&%20outputs-vignette(%22pipeline_overview%22)-informational)](https://bioinfocz.github.io/scdrake/articles/pipeline_overview.html)
 [![Pipeline
@@ -12,7 +14,8 @@ diagram](https://img.shields.io/badge/Pipeline%20diagram-Show-informational)](ht
 ![License](https://img.shields.io/github/license/bioinfocz/scdrake)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![R-CMD-check-bioc](https://github.com/bioinfocz/scdrake/actions/workflows/check-bioc.yaml/badge.svg?branch=main)](https://github.com/bioinfocz/scdrake/actions/workflows/check-bioc.yaml)
+[![Docker Image
+CI](https://github.com/bioinfocz/scdrake/actions/workflows/docker-ci.yml/badge.svg?branch=main)](https://github.com/bioinfocz/scdrake/actions/workflows/docker-ci.yml)
 
 `{scdrake}` is a scalable and reproducible pipeline for secondary
 analysis of droplet-based single-cell RNA-seq data. `{scdrake}` is an R
@@ -63,6 +66,13 @@ The pipeline structure along with
 and links to outputs is described in `vignette("pipeline_overview")`
 ([link](https://bioinfocz.github.io/scdrake/articles/pipeline_overview.html)).
 
+If you use `{scdrake}` in your research, please, consider citing
+
+> Kubovciak J, Kolar M, Novotny J (2023). “Scdrake: a reproducible and
+> scalable pipeline for scRNA-seq data analysis.” *Bioinformatics
+> Advances*, **3**(1).
+> [doi:10.1093/bioadv/vbad089](https://doi.org/10.1093/bioadv/vbad089).
+
 Huge thanks go to the authors of the [Orchestrating Single-Cell Analysis
 with Bioconductor](https://bioconductor.org/books/3.15/OSCA) book on
 whose methods and recommendations is `{scdrake}` largely based.
@@ -98,8 +108,8 @@ You can pull the Docker image with the latest stable `{scdrake}` version
 using
 
 ``` bash
-docker pull jirinovo/scdrake:1.5.0-bioc3.15
-singularity pull docker:jirinovo/scdrake:1.5.0-bioc3.15
+docker pull jirinovo/scdrake:1.5.2
+singularity pull docker:jirinovo/scdrake:1.5.2
 ```
 
 or list available versions in [our Docker Hub
@@ -108,18 +118,15 @@ repository](https://hub.docker.com/r/jirinovo/scdrake/tags).
 For the latest development version use
 
 ``` bash
-docker pull jirinovo/scdrake:latest-bioc3.15
-singularity pull docker:jirinovo/scdrake:latest-bioc3.15
+docker pull jirinovo/scdrake:latest
+singularity pull docker:jirinovo/scdrake:latest
 ```
 
-**Note for Mac users with M1 chipsets**: you can use the `arm64` version
-of the image:
+**Note for Mac users with M1/M2 chipsets**: until version 1.5.0
+(inclusive), `arm64` images are available.
 
 ``` bash
 docker pull jirinovo/scdrake:1.5.0-bioc3.15-arm64
-singularity pull docker:jirinovo/scdrake:1.5.0-bioc3.15-arm64
-docker pull jirinovo/scdrake:latest-bioc3.15-arm64
-singularity pull docker:jirinovo/scdrake:latest-bioc3.15-arm64
 ```
 
 ### Running the container
@@ -144,7 +151,7 @@ docker run -d \
   -e USERID=$(id -u) \
   -e GROUPID=$(id -g) \
   -e PASSWORD=1234 \
-  jirinovo/scdrake:1.5.0-bioc3.15
+  jirinovo/scdrake:1.5.2
 ```
 
 For Singularity, also make shared directories and execute the container
@@ -227,7 +234,7 @@ for `{scdrake}` and you can use it to install all dependencies by
 
 ``` r
 ## -- This is a lockfile for the latest stable version of scdrake.
-download.file("https://raw.githubusercontent.com/bioinfocz/scdrake/1.5.0/renv.lock")
+download.file("https://raw.githubusercontent.com/bioinfocz/scdrake/1.5.2/renv.lock")
 ## -- You can increase the number of CPU cores to speed up the installation.
 options(Ncpus = 2)
 renv::restore(lockfile = "renv.lock", repos = BiocManager::repositories())
@@ -247,7 +254,7 @@ installed from the lockfile).
 
 ``` r
 remotes::install_github(
-  "bioinfocz/scdrake@1.5.0",
+  "bioinfocz/scdrake@1.5.2",
   dependencies = FALSE, upgrade = FALSE,
   keep_source = TRUE, build_vignettes = TRUE,
   repos = BiocManager::repositories()
@@ -313,8 +320,12 @@ vignette](https://bioinfocz.github.io/scdrake/articles/scdrake.html)
 
 ## Vignettes and other readings
 
-See <https://bioinfocz.github.io/scdrake> for a documentation website
-where links to vignettes below become real :-)
+See <https://bioinfocz.github.io/scdrake> for a documentation website of
+the latest stable version (1.5.2) where links to vignettes below become
+real :-)
+
+See <https://bioinfocz.github.io/scdrake/dev> for a documentation
+website of the current development version.
 
 -   Guides:
     -   Using the Docker image:
