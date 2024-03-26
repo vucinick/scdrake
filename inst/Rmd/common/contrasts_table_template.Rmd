@@ -74,6 +74,7 @@ x <- scdrake::lapply_rows(other_params$dimred_plots, FUN = function(par) {
   scdrake::md_header(stringr::str_to_upper(par$plot_dimreds), 3)
   p <- par$plot
   scdrake::highlight_points(p, column_name = "colour_by", levels = c(other_params$target, other_params$reference)) %>% print()
+  return(par)
 })
 ```
 

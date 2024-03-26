@@ -57,6 +57,7 @@ x <- lapply(names(group_list), function(group_name) {
   y <- scdrake::lapply_rows(dimred_plots, FUN = function(par) {
     scdrake::md_header(stringr::str_to_upper(par$plot_dimreds), 4)
     print(par$plot)
+    return(par)
   })
 
   scdrake::md_header("Results by contrasts", 3, extra = "{.tabset}")
